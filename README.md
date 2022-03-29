@@ -3,7 +3,7 @@
 
 <h2><u>DATA SOURCES</u></h2>
 
-<h2>[Watershed (NHD Plus)](https://apps.nationalmap.gov/downloader/#/)</h2>
+### [Watershed (NHD Plus)](https://apps.nationalmap.gov/downloader/#/)
 Hydrography->NHDPlus High Resolution (NHDPlus HR)
 
 ###[Elevation](https://apps.nationalmap.gov/downloader/#/)
