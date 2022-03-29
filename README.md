@@ -6,21 +6,21 @@
 ### [Watershed (NHD Plus)](https://apps.nationalmap.gov/downloader/#/)
 Hydrography->NHDPlus High Resolution (NHDPlus HR)
 
-###[Elevation](https://apps.nationalmap.gov/downloader/#/)
+### [Elevation](https://apps.nationalmap.gov/downloader/#/)
 Digital Evevation map (spatial resolution of 30m)
 
-###[Design Storm](https://hdsc.nws.noaa.gov/hdsc/pfds/pfds_gis.html)
+### [Design Storm](https://hdsc.nws.noaa.gov/hdsc/pfds/pfds_gis.html)
 Interval - 5yrs, Duration- 15mins; Missing a segment of North-Western USA
 
-###[Vegetation](https://landfire.gov/version_download.php#)
+### [Vegetation](https://landfire.gov/version_download.php#)
 We use EVT-140 CONUS (2014) data.
 
-###[Soil](https://water.usgs.gov/GIS/metadata/usgswrd/XML/ussoils.xml#stdorder)
+### [Soil](https://water.usgs.gov/GIS/metadata/usgswrd/XML/ussoils.xml#stdorder)
 STATSGO Database.
 
 <hr style="border:0.5px solid gray">
 
-##<u>SHAPEFILE SIMPLIFICATION</u>
+## <u>SHAPEFILE SIMPLIFICATION</u>
 
 NHD-shapefiles were too large in size and number to support fast visualization. We simplified these shapes to enable fast 
 fetching. The *shape_simplification_ogr* directory contains scripts for simplification of shapefiles. 
@@ -32,12 +32,12 @@ For simplification of the STATSGO shapes, just run *simplification_statsgo_scrip
 
 <sub><sub>NOTE TO SELF: Run simplification on lattice-77 and copy and ingest from lattice-101.</sub></sub>
 
-##<u>DIGITAL ELEVATION MAP ZONAL STATISTICS</u>
+## <u>DIGITAL ELEVATION MAP ZONAL STATISTICS</u>
 Run the following from the directory containing DEM TIFFs:
 
 ```ls -n | %{py  PostFireDebrisRiskAnalysis\arcpy_processing\dem_processing\dem_huc_zstats_w_intrc_chk.py $_}```
 
-##<u>DNBR ZONAL STATISTICS</u>
+## <u>DNBR ZONAL STATISTICS</u>
 Differential Normalized Burn Ratio. 
 
 1) Import the file *EVT-140_CONUS_MAIN\US_140EVT_20180618\Grid\us_140evt* into ArcMap. 
@@ -52,7 +52,7 @@ cd C:\Users\sapmitra\Documents\PostFireDebris\data\CatchmentBoundaries\temp_shap
 ls -n | %{py PostFireDebrisRiskAnalysis\arcpy_processing\vegetation_processing\dnbr_zonal_stats_single.py $_}
 ```
 
-##<u>STATS SOIL ZONAL STATISTICS</u>
+## <u>STATS SOIL ZONAL STATISTICS</u>
 Run the following from the directory containing DEM TIFFs:
 
 ```
@@ -61,7 +61,7 @@ ls -n | findstr "shp"| %{py C:\Users\sapmitra\PycharmProjects\FireWatcher\data_p
 ```
 
 
-##<u>DESIGN STORM</u>
+## <u>DESIGN STORM</u>
 
 Run the following from the directory containing Design Storm .asc files:
 
@@ -70,33 +70,33 @@ cd C:\Users\sapmitra\Documents\PostFireDebris\data\DesignStorm
 ls -n | %{py PostFireDebrisRiskAnalysis\arcpy_processing\design_storm_processing\dstorm_huc_zonal_intrc_chk_single.py $_}
 ```
 
-##<u>COMBINE BOUNDARIES</u>
+## <u>COMBINE BOUNDARIES</u>
 
 Use files *PostFireDebrisRiskAnalysis\combine_boundaries\combine\*.py* to combine the various X1, X2, X3 and 
 Design Storms for overlapping/duplicate catchment boundaries.
 
-##<u>TH<sub>i15</sub></u>
+## <u>TH<sub>i15</sub></u>
 
 Run *combine_boundaries/compute_thi15.py* on lattice machines to compute TH<sub>i15</sub>. DNBR (X2) has to be scaled by dividing by 1000.
 
-##<u>POST-FIRE RISK</u>
+## <u>POST-FIRE RISK</u>
 
 Run *PostFireDebrisRiskAnalysis\thi15\compare_thi15_DS.py*
 
 
 
-#<b><center>INGESTION INTO MONGODB</center></b>
+# <b><center>INGESTION INTO MONGODB</center></b>
 <hr style="border:2px solid gray">
 
 
-##<u>COMMANDS USED</u>
+## <u>COMMANDS USED</u>
 
 ```
 db.createCollection("nhd_shapes")
 db.nhd_shapes.createIndex({geometry : "2dsphere"})
 db.X1_Elevation.createIndex({"GridCode": 1},{unique: true});
 ```
-##<u>DATA INGESTION</u>
+## <u>DATA INGESTION</u>
 
 The *PostFireDebrisRiskAnalysis\shape_simplification_ogr\update_grid_script.sh* script excludes/includes any shape-files that
 were missed in the previous run due to incompatibility with mongodb and also updates the GridCode and copies it to the upper level
