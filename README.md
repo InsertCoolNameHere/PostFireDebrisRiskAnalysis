@@ -111,3 +111,35 @@ Computed Attributes relating to each NHD catchment is appended to the correspond
 ```
 mongoimport --port 27018 --db sustaindb --collection nhd_shapes --mode merge --upsertFields GridCode --headerline --type csv --file thi15.csv
 ```
+
+Move the DStorm, THI15, RISK parameters into the *properties* attribute for visualization on Sustain:
+
+```angular2html
+db.nhd_test.find().forEach(doc =>
+  {
+    let id = doc._id;
+    let dstorm = doc.DStorm;
+    let thi15 = doc.THI15;
+    let risk = doc.RISK;
+    if (dstorm) {
+        db.nhd_test.update({"_id": id}, {$set: {"properties.DStorm": dstorm}});
+    }
+    if (thi15) {
+        db.nhd_test.update({"_id": id}, {$set: {"properties.THI15": thi15}});
+    }
+    if (risk) {
+        db.nhd_test.update({"_id": id}, {$set: {"properties.RISK": risk}});
+    }
+  }
+);
+```
+
+Update script to unset *properties.DStorm* for test:
+
+```
+
+db.nhd_test.update({}, {$unset: {'properties.DStorm':1}}, {multi: true});
+
+mongoimport --port 27018 --db sustaindb --collection nhd_test --mode merge --upsertFields GridCode --headerline --type csv --file combined_DS_test.csv 
+
+```
