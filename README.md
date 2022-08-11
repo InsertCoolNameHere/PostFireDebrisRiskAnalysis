@@ -142,4 +142,43 @@ db.nhd_test.update({}, {$unset: {'properties.DStorm':1}}, {multi: true});
 
 mongoimport --port 27018 --db sustaindb --collection nhd_test --mode merge --upsertFields GridCode --headerline --type csv --file combined_DS_test.csv 
 
+
+
+
+
+db.nhd_shapes.updateMany(
+{},
+[
+  {
+    $unset: ["properties.DStorm", "properties.THI15", "properties.RISK"] 
+  }
+])
+
+db.nhd_shapes.updateMany(
+{},
+[
+  {
+    $set: {
+      "properties.RISK": -1
+    }
+  }
+]);
+
+
+db.nhd_shapes.updateMany(
+{},
+[
+  {
+    $set: {
+      "properties.DStorm": "$DStorm",
+      "properties.THI15": "$THI15",
+      "properties.RISK": "$RISK"
+    }
+  }
+]);
+
+
+
+
+
 ```
